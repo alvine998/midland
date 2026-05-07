@@ -32,7 +32,7 @@ class FrontController extends Controller
         return [
             'title'               => $title,
             'meta_description'    => $description,
-            'og_image'            => $og_image ?? asset('images/og-image.jpg'),
+            'og_image'            => $og_image ?? url('images/og-image.jpg'),
         ];
     }
 
@@ -44,7 +44,7 @@ class FrontController extends Controller
         $seo          = $this->seo(
             'Midland Properti - Agen Properti Terpercaya Jakarta',
             'Cari properti impian Anda di Midland Properti. Kami menawarkan rumah, apartemen, ruko, dan kavling berkualitas di lokasi strategis.',
-            $page?->hero_image ? asset('storage/' . $page->hero_image) : null
+            $page?->hero_image ? url('storage/' . $page->hero_image) : null
         );
         return view('front.home', array_merge($this->nav(), compact('page', 'featured', 'testimonials'), $seo));
     }
@@ -68,7 +68,7 @@ class FrontController extends Controller
         $seo        = $this->seo(
             $project->title . ' - Midland Properti',
             $project->description ? substr(strip_tags($project->description), 0, 160) : 'Lihat detail proyek ' . $project->title . ' di Midland Properti.',
-            $project->image ? asset('storage/' . $project->image) : null
+            $project->image ? url('storage/' . $project->image) : null
         );
         return view('front.project-detail', array_merge($this->nav(), compact('project', 'properties', 'related'), $seo));
     }
@@ -81,7 +81,7 @@ class FrontController extends Controller
         $seo      = $this->seo(
             $property->title . ' - Midland Properti',
             $property->description ? substr(strip_tags($property->description), 0, 160) : 'Lihat detail properti ' . $property->title . ' di Midland Properti.',
-            $property->image ? asset('storage/' . $property->image) : null
+            $property->image ? url('storage/' . $property->image) : null
         );
         return view('front.property-detail', array_merge($this->nav(), compact('property', 'project', 'related'), $seo));
     }
@@ -115,7 +115,7 @@ class FrontController extends Controller
         $seo = $this->seo(
             $article->title . ' - Midland Properti Blog',
             $article->excerpt ?: substr(strip_tags($article->content), 0, 160),
-            $article->image ? asset('storage/' . $article->image) : null
+            $article->image ? url('storage/' . $article->image) : null
         );
         return view('front.article-detail', array_merge($this->nav(), compact('article', 'related'), $seo));
     }

@@ -13,11 +13,12 @@ class LeadController extends Controller
         $query = Lead::latest();
 
         if ($request->filled('search')) {
-            $q = $request->search;
-            $query->where(function ($builder) use ($q) {
-                $builder->where('name', 'like', "%$q%")
-                        ->orWhere('email', 'like', "%$q%")
-                        ->orWhere('phone', 'like', "%$q%");
+            $searchTerm = trim($request->search);
+            $likePattern = "%{$searchTerm}%";
+            $query->where(function ($builder) use ($likePattern) {
+                $builder->where('name', 'like', $likePattern)
+                        ->orWhere('email', 'like', $likePattern)
+                        ->orWhere('phone', 'like', $likePattern);
             });
         }
 

@@ -16,12 +16,15 @@
     <meta property="og:title" content="@yield('title', 'Midland Properti - Agen Properti Terpercaya')">
     <meta property="og:description" content="@yield('meta_description', 'Midland Properti adalah agen properti terpercaya dengan berbagai pilihan rumah, apartemen, ruko, dan kavling di Jakarta.')">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:image" content="@yield('og_image', asset('images/og-image.jpg'))">
+    <meta property="og:image" content="@yield('og_image', url('images/og-image.png'))">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="@yield('title', 'Midland Properti - Agen Properti Terpercaya')">
     <meta name="twitter:description" content="@yield('meta_description', 'Midland Properti adalah agen properti terpercaya dengan berbagai pilihan rumah, apartemen, ruko, dan kavling di Jakarta.')">
-    <meta name="twitter:image" content="@yield('og_image', asset('images/og-image.jpg'))">
+    <meta name="twitter:image" content="@yield('og_image', url('images/og-image.png'))">
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
