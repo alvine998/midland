@@ -1,24 +1,24 @@
 <div class="row g-4">
     <div class="col-md-8">
         <div class="mb-3">
-            <label class="form-label fw-medium">Judul Artikel <span class="text-danger">*</span></label>
+            <label class="form-label fw-medium">Judul Berita <span class="text-danger">*</span></label>
             <input type="text" name="title" class="form-control @error('title') is-invalid @enderror"
-                   value="{{ old('title', $article->title ?? '') }}" required placeholder="Contoh: Tips Memilih Properti Investasi">
+                   value="{{ old('title', $article->title ?? '') }}" required placeholder="Contoh: Info Promo Properti Terbaru">
             @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
         </div>
 
         <div class="mb-3">
             <label class="form-label fw-medium">Ringkasan (Excerpt)</label>
             <textarea name="excerpt" class="form-control @error('excerpt') is-invalid @enderror" rows="3"
-                      placeholder="Ringkasan singkat artikel (ditampilkan di listing)...">{{ old('excerpt', $article->excerpt ?? '') }}</textarea>
+                      placeholder="Ringkasan singkat berita (ditampilkan di listing)...">{{ old('excerpt', $article->excerpt ?? '') }}</textarea>
             <div class="form-text">Maksimal 500 karakter</div>
             @error('excerpt')<div class="invalid-feedback">{{ $message }}</div>@enderror
         </div>
 
         <div class="mb-3">
-            <label class="form-label fw-medium">Konten Artikel <span class="text-danger">*</span></label>
+            <label class="form-label fw-medium">Konten Berita <span class="text-danger">*</span></label>
             <textarea name="content" id="content-editor" class="form-control @error('content') is-invalid @enderror" rows="10"
-                      placeholder="Tuliskan konten artikel lengkap di sini...">{{ old('content', $article->content ?? '') }}</textarea>
+                      placeholder="Tuliskan konten berita lengkap di sini...">{{ old('content', $article->content ?? '') }}</textarea>
             @error('content')<div class="invalid-feedback">{{ $message }}</div>@enderror
         </div>
 
@@ -56,7 +56,7 @@
 
     <div class="col-md-4">
         <div class="mb-3">
-            <label class="form-label fw-medium">Gambar Artikel</label>
+            <label class="form-label fw-medium">Gambar Berita</label>
             @if(isset($article) && $article->image)
                 <div class="mb-2">
                     <img src="{{ asset('storage/' . $article->image) }}" class="img-thumbnail w-100" style="height:200px;object-fit:cover" alt="">

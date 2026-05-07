@@ -11,6 +11,9 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\LeadController;
+use App\Http\Controllers\Admin\TestimonialController;
+use App\Http\Controllers\Admin\CareerController;
 use Illuminate\Support\Facades\Route;
 
 // ─── SEO ────────────────────────────────────────────────────────────────────
@@ -26,6 +29,10 @@ Route::get('/articles', [FrontController::class, 'articles'])->name('articles');
 Route::get('/articles/{slug}', [FrontController::class, 'articleShow'])->name('articles.show');
 Route::get('/about', [FrontController::class, 'about'])->name('about');
 Route::get('/contact', [FrontController::class, 'contact'])->name('contact');
+Route::get('/karir', [FrontController::class, 'karir'])->name('karir');
+Route::get('/simulasi-cicilan', [FrontController::class, 'simulasiCicilan'])->name('simulasi-cicilan');
+Route::get('/simulasi-cicilan/recommend', [FrontController::class, 'simulasiRecommend'])->name('simulasi-cicilan.recommend');
+Route::post('/simulasi-cicilan/lead', [FrontController::class, 'simulasiStoreLead'])->name('simulasi-cicilan.lead');
 
 // ─── Admin Auth ────────────────────────────────────────────────────────────
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -65,5 +72,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Articles CRUD
         Route::resource('articles', ArticleController::class)->names('articles');
+
+        // Leads (Simulasi Cicilan)
+        Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');
+        Route::delete('/leads/{lead}', [LeadController::class, 'destroy'])->name('leads.destroy');
+
+        // Testimonials CRUD
+        Route::resource('testimonials', TestimonialController::class)->names('testimonials');
+
+        // Careers CRUD
+        Route::resource('careers', CareerController::class)->names('careers');
     });
 });

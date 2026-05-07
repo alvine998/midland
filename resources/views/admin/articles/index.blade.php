@@ -1,14 +1,14 @@
 @extends('layouts.admin')
-@section('title', 'Kelola Artikel')
+@section('title', 'Kelola Berita')
 
 @section('content')
 <div class="d-flex align-items-center justify-content-between mb-4">
     <div>
-        <div class="page-title">Kelola Artikel</div>
-        <div class="page-subtitle">Daftar semua artikel blog</div>
+        <div class="page-title">Kelola Berita</div>
+        <div class="page-subtitle">Daftar semua berita</div>
     </div>
     <a href="{{ route('admin.articles.create') }}" class="btn btn-primary">
-        <i class="bi bi-plus-circle me-2"></i>Tambah Artikel
+        <i class="bi bi-plus-circle me-2"></i>Tambah Berita
     </a>
 </div>
 
@@ -75,7 +75,7 @@
                     <tr>
                         <td colspan="6" class="text-center py-4 text-muted">
                             <i class="bi bi-inbox" style="font-size:2rem;opacity:0.3"></i>
-                            <p class="mb-0">Belum ada artikel</p>
+                            <p class="mb-0">Belum ada berita</p>
                         </td>
                     </tr>
                 @endforelse

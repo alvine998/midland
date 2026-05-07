@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Models\Organization;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Testimonial;
+use App\Models\Career;
 
 class DatabaseSeeder extends Seeder
 {
@@ -282,5 +284,11 @@ Midland Properti siap membantu Anda melakukan transaksi properti dengan aman dan
         foreach ($articles as $article) {
             Article::firstOrCreate(['slug' => $article['slug']], $article);
         }
+
+        // Dummy testimonials
+        $this->call(TestimonialSeeder::class);
+
+        // Dummy careers
+        $this->call(CareerSeeder::class);
     }
 }

@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title', 'Tambah Artikel')
+@section('title', 'Tambah Berita')
 
 @section('content')
 <div class="mb-4">
     <a href="{{ route('admin.articles.index') }}" class="text-decoration-none text-muted small">
-        <i class="bi bi-chevron-left"></i> Kembali ke Artikel
+        <i class="bi bi-chevron-left"></i> Kembali ke Berita
     </a>
-    <h1 class="h3 mt-2">Tambah Artikel Baru</h1>
+    <h1 class="h3 mt-2">Tambah Berita Baru</h1>
 </div>
 
 <div class="card border-0 shadow-sm">
@@ -16,7 +16,7 @@
             @include('admin.articles._form')
             <div class="mt-4 d-flex gap-2">
                 <button type="submit" class="btn btn-success">
-                    <i class="bi bi-check-lg"></i> Simpan Artikel
+                    <i class="bi bi-check-lg"></i> Simpan Berita
                 </button>
                 <a href="{{ route('admin.articles.index') }}" class="btn btn-secondary">
                     <i class="bi bi-x-lg"></i> Batal

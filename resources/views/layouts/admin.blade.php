@@ -92,10 +92,25 @@
             <i class="bi bi-images"></i> Galeri
         </a>
         <a href="{{ route('admin.articles.index') }}" class="nav-link {{ request()->routeIs('admin.articles*') ? 'active' : '' }}">
-            <i class="bi bi-newspaper"></i> Artikel
+            <i class="bi bi-newspaper"></i> Berita
         </a>
         <a href="{{ route('admin.organizations.index') }}" class="nav-link {{ request()->routeIs('admin.organizations*') ? 'active' : '' }}">
             <i class="bi bi-people"></i> Organisasi
+        </a>
+        <a href="{{ route('admin.testimonials.index') }}" class="nav-link {{ request()->routeIs('admin.testimonials*') ? 'active' : '' }}">
+            <i class="bi bi-chat-quote"></i> Testimoni
+        </a>
+        <a href="{{ route('admin.careers.index') }}" class="nav-link {{ request()->routeIs('admin.careers*') ? 'active' : '' }}">
+            <i class="bi bi-briefcase"></i> Karir
+        </a>
+
+        <div class="nav-section mt-2">Leads</div>
+        <a href="{{ route('admin.leads.index') }}" class="nav-link {{ request()->routeIs('admin.leads*') ? 'active' : '' }}">
+            <i class="bi bi-person-lines-fill"></i> Leads Simulasi
+            @php $leadsCount = \App\Models\Lead::whereDate('created_at', today())->count(); @endphp
+            @if($leadsCount > 0)
+                <span class="badge ms-auto" style="background:var(--gold);color:var(--primary)">{{ $leadsCount }}</span>
+            @endif
         </a>
 
         <div class="nav-section mt-2">Pengaturan</div>

@@ -66,10 +66,28 @@
             </div>
         </div>
     </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card stat-card shadow-sm">
+            <div class="d-flex align-items-center gap-3">
+                <div class="stat-icon" style="background:rgba(201,168,76,0.1)">
+                    <i class="bi bi-person-lines-fill" style="color:var(--gold)"></i>
+                </div>
+                <div>
+                    <div class="stat-number">{{ $stats['leads_total'] }}</div>
+                    <div class="stat-label">
+                        Leads Simulasi
+                        @if($stats['leads_today'] > 0)
+                            <span class="badge ms-1" style="background:var(--gold);color:var(--primary);font-size:.65rem">+{{ $stats['leads_today'] }} hari ini</span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Quick Actions -->
-<div class="row g-3">
+<!-- Quick Actions + Guide -->
+<div class="row g-3 mb-4">
     <div class="col-md-6 col-lg-4">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body p-4">
@@ -115,6 +133,53 @@
                 </ul>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Recent Leads -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4 d-flex align-items-center justify-content-between mb-0">
+        <h6 class="fw-semibold mb-0" style="color:var(--primary)"><i class="bi bi-person-lines-fill me-2 text-warning"></i>Leads Simulasi Terbaru</h6>
+        <a href="{{ route('admin.leads.index') }}" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-4">Nama</th>
+                    <th>Email</th>
+                    <th>Telepon</th>
+                    <th>Harga Simulasi</th>
+                    <th class="pe-4">Waktu</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($recentLeads as $lead)
+                <tr>
+                    <td class="ps-4 fw-semibold">{{ $lead->name }}</td>
+                    <td><a href="mailto:{{ $lead->email }}" class="text-decoration-none">{{ $lead->email }}</a></td>
+                    <td>
+                        @php $wa = preg_replace('/\D/', '', $lead->phone); @endphp
+                        <a href="https://wa.me/{{ $wa }}" target="_blank" class="text-decoration-none">
+                            <i class="bi bi-whatsapp text-success me-1"></i>{{ $lead->phone }}
+                        </a>
+                    </td>
+                    <td>
+                        @if($lead->price_input)
+                            <span style="color:var(--primary);font-weight:600">Rp {{ number_format($lead->price_input, 0, ',', '.') }}</span>
+                        @else
+                            <span class="text-muted">—</span>
+                        @endif
+                    </td>
+                    <td class="pe-4 text-muted" style="font-size:.82rem">{{ $lead->created_at->diffForHumans() }}</td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-muted">Belum ada leads.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 @endsection

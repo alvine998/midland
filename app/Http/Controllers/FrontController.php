@@ -7,7 +7,10 @@ use App\Models\Page;
 use App\Models\Project;
 use App\Models\Property;
 use App\Models\Article;
+use App\Models\Career;
+use App\Models\Lead;
 use App\Models\Setting;
+use App\Models\Testimonial;
 
 class FrontController extends Controller
 {
@@ -35,14 +38,15 @@ class FrontController extends Controller
 
     public function home()
     {
-        $page     = Page::findBySlug('home');
-        $featured = Project::where('featured', true)->orderBy('sort_order')->take(6)->get();
-        $seo      = $this->seo(
+        $page         = Page::findBySlug('home');
+        $featured     = Project::where('featured', true)->orderBy('sort_order')->take(6)->get();
+        $testimonials = Testimonial::where('is_active', true)->orderBy('sort_order')->take(6)->get();
+        $seo          = $this->seo(
             'Midland Properti - Agen Properti Terpercaya Jakarta',
             'Cari properti impian Anda di Midland Properti. Kami menawarkan rumah, apartemen, ruko, dan kavling berkualitas di lokasi strategis.',
             $page?->hero_image ? asset('storage/' . $page->hero_image) : null
         );
-        return view('front.home', array_merge($this->nav(), compact('page', 'featured'), $seo));
+        return view('front.home', array_merge($this->nav(), compact('page', 'featured', 'testimonials'), $seo));
     }
 
     public function project()
@@ -135,5 +139,80 @@ class FrontController extends Controller
             'Hubungi kami untuk konsultasi gratis. Tim ahli kami siap membantu Anda menemukan properti yang tepat sesuai kebutuhan.'
         );
         return view('front.contact', array_merge($this->nav(), compact('page'), $seo));
+    }
+
+    public function simulasiCicilan()
+    {
+        $seo = $this->seo(
+            'Simulasi Cicilan KPR - Midland Properti',
+            'Hitung estimasi cicilan KPR properti Anda secara mudah dan cepat. Masukkan harga properti, DP, tenor, dan suku bunga untuk melihat skema cicilan.'
+        );
+        return view('front.simulasi-cicilan', array_merge($this->nav(), $seo));
+    }
+
+    public function karir()
+    {
+        $careers = Career::where('is_active', true)->orderBy('sort_order')->orderByDesc('id')->get();
+        $seo     = $this->seo(
+            'Karir - Midland Properti',
+            'Bergabunglah bersama tim profesional Midland Properti. Lihat lowongan pekerjaan terkini dan wujudkan karir impianmu di industri properti.'
+        );
+        return view('front.karir', array_merge($this->nav(), compact('careers'), $seo));
+    }
+
+    public function simulasiStoreLead(\Illuminate\Http\Request $request)
+    {
+        $validated = $request->validate([
+            'name'        => ['required', 'string', 'max:255'],
+            'email'       => ['required', 'email', 'max:255'],
+            'phone'       => ['required', 'string', 'max:30'],
+            'price_input' => ['nullable', 'integer', 'min:0'],
+        ]);
+
+        Lead::create([
+            'name'        => $validated['name'],
+            'email'       => $validated['email'],
+            'phone'       => $validated['phone'],
+            'price_input' => $validated['price_input'] ?? null,
+            'ip_address'  => $request->ip(),
+        ]);
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function simulasiRecommend(\Illuminate\Http\Request $request)    {
+        $price = (float) $request->query('price', 0);
+
+        if ($price <= 0) {
+            return response()->json([]);
+        }
+
+        // Find up to 3 available properties within ±30% of the input price
+        $margin = 0.30;
+        $min    = $price * (1 - $margin);
+        $max    = $price * (1 + $margin);
+
+        $properties = Property::where('status', 'available')
+            ->whereBetween('price', [$min, $max])
+            ->orderByRaw('ABS(price - ?)', [$price])
+            ->take(3)
+            ->get();
+
+        return response()->json(
+            $properties->map(function ($p) {
+                return [
+                    'id'          => $p->id,
+                    'title'       => $p->title,
+                    'price'       => (float) $p->price,
+                    'price_fmt'   => 'Rp ' . number_format($p->price, 0, ',', '.'),
+                    'location'    => $p->location,
+                    'type_label'  => $p->getTypeLabel(),
+                    'status'      => $p->status,
+                    'status_label'=> $p->getStatusLabel(),
+                    'image'       => $p->image ? asset('storage/' . $p->image) : null,
+                    'url'         => route('property.show', $p->slug),
+                ];
+            })
+        );
     }
 }

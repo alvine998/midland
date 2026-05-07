@@ -1,18 +1,18 @@
 @extends('layouts.public')
-@section('title', 'Artikel')
+@section('title', 'Berita')
 
 @section('content')
 <!-- Page Header -->
 <div class="page-header">
     <div class="container">
-        <h1>{{ $page->hero_title ?? 'Artikel Terbaru' }}</h1>
+        <h1>{{ $page->hero_title ?? 'Berita Terbaru' }}</h1>
         @if($page->hero_subtitle ?? false)
             <p style="color:rgba(255,255,255,0.75);max-width:600px">{{ $page->hero_subtitle }}</p>
         @endif
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">{{ $menu_home ?? 'Home' }}</a></li>
-                <li class="breadcrumb-item active">Artikel</li>
+                <li class="breadcrumb-item active">Berita</li>
             </ol>
         </nav>
     </div>
@@ -59,7 +59,7 @@
         @else
             <div class="text-center py-5">
                 <i class="bi bi-newspaper text-muted" style="font-size:4rem;opacity:0.3"></i>
-                <p class="text-muted mt-3">Belum ada artikel yang dipublikasikan.</p>
+                <p class="text-muted mt-3">Belum ada berita yang dipublikasikan.</p>
             </div>
         @endif
     </div>

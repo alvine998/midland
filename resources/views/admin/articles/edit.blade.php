@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title', 'Edit Artikel - ' . $article->title)
+@section('title', 'Edit Berita - ' . $article->title)
 
 @section('content')
 <div class="mb-4">
     <a href="{{ route('admin.articles.index') }}" class="text-decoration-none text-muted small">
-        <i class="bi bi-chevron-left"></i> Kembali ke Artikel
+        <i class="bi bi-chevron-left"></i> Kembali ke Berita
     </a>
-    <h1 class="h3 mt-2">Edit Artikel</h1>
+    <h1 class="h3 mt-2">Edit Berita</h1>
     <p class="text-muted">{{ $article->title }}</p>
 </div>
 

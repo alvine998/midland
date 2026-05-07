@@ -177,9 +177,56 @@
     </div>
 </section>
 
+<!-- Testimonials -->
+@if($testimonials->count())
+<section class="py-5 bg-light-custom">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-badge">Testimoni</span>
+            <h2 class="section-title">Apa Kata Klien Kami</h2>
+            <div class="divider-gold center"></div>
+            <p class="text-muted mx-auto" style="max-width:500px">Kepuasan klien adalah prioritas utama kami. Berikut pengalaman nyata dari mereka yang telah mempercayakan kebutuhan propertinya kepada kami.</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            @foreach($testimonials as $t)
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm h-100 p-4" style="border-radius:12px">
+                    <!-- Stars -->
+                    <div class="mb-3">
+                        @for($i = 1; $i <= 5; $i++)
+                            <i class="bi bi-star{{ $i <= $t->rating ? '-fill' : '' }}" style="color:var(--gold);font-size:.9rem"></i>
+                        @endfor
+                    </div>
+                    <!-- Quote -->
+                    <p class="text-muted mb-4" style="font-size:.92rem;line-height:1.7;flex:1">
+                        <i class="bi bi-quote text-gold opacity-50 me-1" style="font-size:1.2rem"></i>{{ $t->content }}
+                    </p>
+                    <!-- Author -->
+                    <div class="d-flex align-items-center gap-3">
+                        @if($t->photo)
+                            <img src="{{ asset('storage/' . $t->photo) }}" alt="{{ $t->name }}" class="rounded-circle" style="width:48px;height:48px;object-fit:cover;flex-shrink:0">
+                        @else
+                            <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:48px;height:48px;background:var(--primary);color:#fff;font-size:1.1rem;font-weight:700">
+                                {{ strtoupper(substr($t->name, 0, 1)) }}
+                            </div>
+                        @endif
+                        <div>
+                            <div class="fw-semibold" style="color:var(--primary)">{{ $t->name }}</div>
+                            @if($t->position)
+                                <div class="text-muted" style="font-size:.8rem">{{ $t->position }}</div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
 <!-- CTA -->
-<section class="cta-section py-5">
-    <div class="container text-center py-3">
+<section class="cta-section py-5">    <div class="container text-center py-3">
         <h2 class="text-white mb-3" style="font-family:'Playfair Display',serif">Siap Menemukan Properti Impian Anda?</h2>
         <p class="text-white-50 mb-4">Hubungi tim kami sekarang dan dapatkan konsultasi gratis bersama agen properti profesional kami.</p>
         <div class="d-flex justify-content-center gap-3 flex-wrap">
