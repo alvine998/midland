@@ -11,7 +11,7 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        $projects = Project::orderBy('sort_order')->orderByDesc('created_at')->paginate(15);
+        $projects = Project::orderBy('sort_order')->orderByDesc('created_at')->get();
         return view('admin.projects.index', compact('projects'));
     }
 
@@ -127,5 +127,14 @@ class ProjectController extends Controller
     {
         $project->delete();
         return redirect()->route('admin.projects.index')->with('success', 'Proyek berhasil dihapus.');
+    }
+
+    public function reorder(Request $request)
+    {
+        $request->validate(['ids' => 'required|array', 'ids.*' => 'integer']);
+        foreach ($request->ids as $position => $id) {
+            Project::where('id', $id)->update(['sort_order' => $position + 1]);
+        }
+        return response()->json(['ok' => true]);
     }
 }

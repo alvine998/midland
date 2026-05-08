@@ -85,6 +85,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/pages/{slug}', [PageController::class, 'update'])->name('pages.update');
 
         // Projects CRUD
+        Route::post('projects/reorder', [ProjectController::class, 'reorder'])->name('projects.reorder');
         Route::resource('projects', ProjectController::class)->names('projects');
 
         // Properties CRUD (nested under projects)
