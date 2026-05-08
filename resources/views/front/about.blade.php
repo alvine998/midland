@@ -25,24 +25,31 @@
                 <h2 class="section-title">{{ $page->section_title ?? 'Midland Properti' }}</h2>
                 <div class="divider-gold"></div>
                 <div class="text-muted" style="line-height:1.9">
-                    {!! nl2br(e($page->content ?? 'Midland Properti adalah agen properti terpercaya yang telah melayani kebutuhan properti Indonesia selama lebih dari 15 tahun. Kami berkomitmen untuk memberikan pelayanan terbaik dalam membantu Anda menemukan properti impian dengan lokasi strategis dan harga terbaik.')) !!}
+                    @if($page && $page->content)
+                        {!! $page->content !!}
+                    @else
+                        Midland Properti adalah agen properti terpercaya yang telah melayani kebutuhan properti Indonesia selama lebih dari 15 tahun. Kami berkomitmen untuk memberikan pelayanan terbaik dalam membantu Anda menemukan properti impian dengan lokasi strategis dan harga terbaik.
+                    @endif
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="row g-3">
-                    @foreach([
-                        ['icon' => 'shield-check', 'title' => 'Terpercaya', 'desc' => 'Agen properti berlisensi dengan rekam jejak yang terbukti.'],
-                        ['icon' => 'graph-up', 'title' => 'Berpengalaman', 'desc' => 'Lebih dari 15 tahun pengalaman di industri properti Indonesia.'],
-                        ['icon' => 'people', 'title' => 'Profesional', 'desc' => 'Tim agen profesional yang siap melayani kebutuhan Anda.'],
-                        ['icon' => 'heart', 'title' => 'Berorientasi Klien', 'desc' => 'Kepuasan klien adalah prioritas utama kami.'],
-                    ] as $item)
+                    @php
+                    $features = ($page && $page->features) ? $page->features : [
+                        ['icon' => 'shield-check', 'title' => 'Terpercaya',        'desc' => 'Agen properti berlisensi dengan rekam jejak yang terbukti.'],
+                        ['icon' => 'graph-up',     'title' => 'Berpengalaman',     'desc' => 'Lebih dari 15 tahun pengalaman di industri properti Indonesia.'],
+                        ['icon' => 'people',       'title' => 'Profesional',       'desc' => 'Tim agen profesional yang siap melayani kebutuhan Anda.'],
+                        ['icon' => 'heart',        'title' => 'Berorientasi Klien','desc' => 'Kepuasan klien adalah prioritas utama kami.'],
+                    ];
+                    @endphp
+                    @foreach($features as $item)
                     <div class="col-6">
                         <div class="p-4 rounded-3 h-100" style="background:var(--light-bg)">
                             <div class="contact-icon mb-3">
-                                <i class="bi bi-{{ $item['icon'] }}"></i>
+                                <i class="bi bi-{{ $item['icon'] ?? 'star' }}"></i>
                             </div>
-                            <h6 style="color:var(--primary)">{{ $item['title'] }}</h6>
-                            <p class="text-muted small mb-0">{{ $item['desc'] }}</p>
+                            <h6 style="color:var(--primary)">{{ $item['title'] ?? '' }}</h6>
+                            <p class="text-muted small mb-0">{{ $item['desc'] ?? '' }}</p>
                         </div>
                     </div>
                     @endforeach
@@ -69,7 +76,7 @@
                         </div>
                         <h4 style="color:var(--primary)">Visi</h4>
                         <div class="divider-gold" style="width:40px"></div>
-                        <p class="text-muted">Menjadi agen properti terkemuka dan terpercaya di Indonesia yang memberikan solusi properti terbaik bagi setiap keluarga dan bisnis.</p>
+                        <p class="text-muted">{{ $page->vision ?? 'Menjadi agen properti terkemuka dan terpercaya di Indonesia yang memberikan solusi properti terbaik bagi setiap keluarga dan bisnis.' }}</p>
                     </div>
                 </div>
             </div>
@@ -81,12 +88,20 @@
                         </div>
                         <h4 style="color:var(--primary)">Misi</h4>
                         <div class="divider-gold" style="width:40px"></div>
+                        @if($page && $page->mission)
+                        <ul class="text-muted ps-3">
+                            @foreach(array_filter(array_map('trim', explode("\n", $page->mission))) as $point)
+                            <li class="mb-2">{{ $point }}</li>
+                            @endforeach
+                        </ul>
+                        @else
                         <ul class="text-muted ps-3">
                             <li class="mb-2">Menyediakan properti berkualitas tinggi di lokasi strategis.</li>
                             <li class="mb-2">Memberikan pelayanan profesional dan transparan.</li>
                             <li class="mb-2">Membangun kepercayaan melalui integritas dan konsistensi.</li>
                             <li>Menghadirkan kemudahan dalam setiap transaksi properti.</li>
                         </ul>
+                        @endif
                     </div>
                 </div>
             </div>
