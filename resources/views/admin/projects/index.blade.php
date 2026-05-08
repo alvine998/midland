@@ -50,7 +50,7 @@
                                     <img src="{{ asset('storage/' . $project->image) }}" style="width:45px;height:45px;object-fit:cover;border-radius:6px" alt="">
                                 @else
                                     <div style="width:45px;height:45px;background:rgba(26,92,58,0.08);border-radius:6px;display:flex;align-items:center;justify-content:center">
-                                        <i class="bi bi-building" style="color:var(--primary)"></i>
+                                        <i class="bi bi-building" style="color:var(--primary);font-size:1.5rem"></i>
                                     </div>
                                 @endif
                                 <div>
