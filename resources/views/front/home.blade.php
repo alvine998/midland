@@ -41,20 +41,21 @@
     <div class="container">
         <div class="row g-3 text-center">
             <div class="col-6 col-md-3">
-                <div class="stat-number">500+</div>
-                <div class="stat-label">Properti Terjual</div>
+                <div class="stat-number">{{ \App\Models\Setting::get('stat_1_number', '500+') }}</div>
+                <div class="stat-label">{{ \App\Models\Setting::get('stat_1_label', 'Properti Terjual') }}</div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="stat-number">{{ \App\Models\Project::count() }}+</div>
-                <div class="stat-label">Proyek Aktif</div>
+                @php $stat2 = \App\Models\Setting::get('stat_2_number', ''); @endphp
+                <div class="stat-number">{{ $stat2 ?: (\App\Models\Project::count() . '+') }}</div>
+                <div class="stat-label">{{ \App\Models\Setting::get('stat_2_label', 'Proyek Aktif') }}</div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="stat-number">15+</div>
-                <div class="stat-label">Tahun Pengalaman</div>
+                <div class="stat-number">{{ \App\Models\Setting::get('stat_3_number', '15+') }}</div>
+                <div class="stat-label">{{ \App\Models\Setting::get('stat_3_label', 'Tahun Pengalaman') }}</div>
             </div>
             <div class="col-6 col-md-3">
-                <div class="stat-number">1000+</div>
-                <div class="stat-label">Klien Puas</div>
+                <div class="stat-number">{{ \App\Models\Setting::get('stat_4_number', '1000+') }}</div>
+                <div class="stat-label">{{ \App\Models\Setting::get('stat_4_label', 'Klien Puas') }}</div>
             </div>
         </div>
     </div>
@@ -119,16 +120,19 @@
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
                 <span class="section-badge">Mengapa Kami</span>
-                <h2 class="section-title">Dipercaya oleh Ribuan Keluarga Indonesia</h2>
+                <h2 class="section-title">{{ \App\Models\Setting::get('whyus_title', 'Dipercaya oleh Ribuan Keluarga Indonesia') }}</h2>
                 <div class="divider-gold"></div>
-                <p class="text-muted mb-4">Midland Properti telah melayani pelanggan selama lebih dari satu dekade dengan komitmen terhadap kualitas, kepercayaan, dan kepuasan klien.</p>
+                <p class="text-muted mb-4">{{ \App\Models\Setting::get('whyus_desc', 'Midland Properti telah melayani pelanggan selama lebih dari satu dekade dengan komitmen terhadap kualitas, kepercayaan, dan kepuasan klien.') }}</p>
+                @php
+                    $whyusItems = [
+                        ['icon' => \App\Models\Setting::get('whyus_item_1_icon', 'shield-check'), 'title' => \App\Models\Setting::get('whyus_item_1_title', 'Terpercaya & Berpengalaman'), 'desc' => \App\Models\Setting::get('whyus_item_1_desc', 'Lebih dari 15 tahun melayani kebutuhan properti Indonesia.')],
+                        ['icon' => \App\Models\Setting::get('whyus_item_2_icon', 'geo-alt'),      'title' => \App\Models\Setting::get('whyus_item_2_title', 'Lokasi Strategis'),          'desc' => \App\Models\Setting::get('whyus_item_2_desc', 'Properti di lokasi terbaik dengan aksesibilitas tinggi.')],
+                        ['icon' => \App\Models\Setting::get('whyus_item_3_icon', 'people'),       'title' => \App\Models\Setting::get('whyus_item_3_title', 'Tim Profesional'),           'desc' => \App\Models\Setting::get('whyus_item_3_desc', 'Agen berpengalaman siap membantu Anda 24/7.')],
+                        ['icon' => \App\Models\Setting::get('whyus_item_4_icon', 'award'),        'title' => \App\Models\Setting::get('whyus_item_4_title', 'Penghargaan Bergengsi'),     'desc' => \App\Models\Setting::get('whyus_item_4_desc', 'Meraih berbagai penghargaan sebagai agen properti terbaik.')],
+                    ];
+                @endphp
                 <div class="row g-3">
-                    @foreach([
-                        ['icon' => 'shield-check', 'title' => 'Terpercaya & Berpengalaman', 'desc' => 'Lebih dari 15 tahun melayani kebutuhan properti Indonesia.'],
-                        ['icon' => 'geo-alt', 'title' => 'Lokasi Strategis', 'desc' => 'Properti di lokasi terbaik dengan aksesibilitas tinggi.'],
-                        ['icon' => 'people', 'title' => 'Tim Profesional', 'desc' => 'Agen berpengalaman siap membantu Anda 24/7.'],
-                        ['icon' => 'award', 'title' => 'Penghargaan Bergengsi', 'desc' => 'Meraih berbagai penghargaan sebagai agen properti terbaik.'],
-                    ] as $item)
+                    @foreach($whyusItems as $item)
                     <div class="col-6">
                         <div class="d-flex gap-3">
                             <div class="flex-shrink-0 mt-1">

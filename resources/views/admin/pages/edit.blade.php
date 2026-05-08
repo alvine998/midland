@@ -191,6 +191,100 @@ $features = old('features', $page->features ?? $defaultFeatures);
 </div>
 @endif
 
+{{-- ── STATS BAR (only for home) ─────────────────────── --}}
+@if($slug === 'home')
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-transparent border-bottom py-3 px-4">
+        <h6 class="mb-0 fw-semibold" style="color:var(--primary)">
+            <i class="bi bi-bar-chart me-2"></i>Statistik Beranda (Stats Bar)
+        </h6>
+        <small class="text-muted">Angka dan label di bawah hero. Kosongkan angka "Proyek Aktif" agar tampil otomatis dari database.</small>
+    </div>
+    <div class="card-body p-4">
+        <div class="row g-3">
+            @foreach([
+                ['num_key' => 'stat_1_number', 'lbl_key' => 'stat_1_label', 'num_ph' => '500+',  'lbl_ph' => 'Properti Terjual'],
+                ['num_key' => 'stat_2_number', 'lbl_key' => 'stat_2_label', 'num_ph' => '',       'lbl_ph' => 'Proyek Aktif'],
+                ['num_key' => 'stat_3_number', 'lbl_key' => 'stat_3_label', 'num_ph' => '15+',   'lbl_ph' => 'Tahun Pengalaman'],
+                ['num_key' => 'stat_4_number', 'lbl_key' => 'stat_4_label', 'num_ph' => '1000+', 'lbl_ph' => 'Klien Puas'],
+            ] as $s)
+            <div class="col-md-3 col-6">
+                <div class="p-3 border rounded">
+                    <label class="form-label fw-medium small">Angka</label>
+                    <input type="text" name="{{ $s['num_key'] }}" class="form-control form-control-sm mb-2" maxlength="20"
+                           value="{{ old($s['num_key'], $settings[$s['num_key']] ?? '') }}"
+                           placeholder="{{ $s['num_ph'] ?: 'otomatis' }}">
+                    <label class="form-label fw-medium small">Label</label>
+                    <input type="text" name="{{ $s['lbl_key'] }}" class="form-control form-control-sm" maxlength="50"
+                           value="{{ old($s['lbl_key'], $settings[$s['lbl_key']] ?? '') }}"
+                           placeholder="{{ $s['lbl_ph'] }}">
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+
+{{-- ── WHY US (only for home) ──────────────────────── --}}
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-transparent border-bottom py-3 px-4">
+        <h6 class="mb-0 fw-semibold" style="color:var(--primary)">
+            <i class="bi bi-patch-check me-2"></i>Seksi "Mengapa Kami"
+        </h6>
+        <small class="text-muted">Judul, deskripsi, dan 4 poin keunggulan. Ikon dari <a href="https://icons.getbootstrap.com" target="_blank">Bootstrap Icons</a> — contoh: shield-check, geo-alt, people, award.</small>
+    </div>
+    <div class="card-body p-4">
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label class="form-label fw-medium">Judul Seksi</label>
+                <input type="text" name="whyus_title" class="form-control" maxlength="150"
+                       value="{{ old('whyus_title', $settings['whyus_title'] ?? '') }}"
+                       placeholder="Dipercaya oleh Ribuan Keluarga Indonesia">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-medium">Deskripsi</label>
+                <textarea name="whyus_desc" class="form-control" rows="2" maxlength="400"
+                          placeholder="Midland Properti telah melayani pelanggan...">{{ old('whyus_desc', $settings['whyus_desc'] ?? '') }}</textarea>
+            </div>
+        </div>
+        <div class="row g-3">
+            @foreach([
+                ['n' => 1, 'icon_def' => 'shield-check', 'title_def' => 'Terpercaya & Berpengalaman', 'desc_def' => 'Lebih dari 15 tahun melayani kebutuhan properti Indonesia.'],
+                ['n' => 2, 'icon_def' => 'geo-alt',      'title_def' => 'Lokasi Strategis',          'desc_def' => 'Properti di lokasi terbaik dengan aksesibilitas tinggi.'],
+                ['n' => 3, 'icon_def' => 'people',       'title_def' => 'Tim Profesional',           'desc_def' => 'Agen berpengalaman siap membantu Anda 24/7.'],
+                ['n' => 4, 'icon_def' => 'award',        'title_def' => 'Penghargaan Bergengsi',     'desc_def' => 'Meraih berbagai penghargaan sebagai agen properti terbaik.'],
+            ] as $item)
+            <div class="col-md-3">
+                <div class="p-3 border rounded">
+                    <div class="fw-semibold text-muted small mb-2">Poin {{ $item['n'] }}</div>
+                    <div class="mb-2">
+                        <label class="form-label small fw-medium mb-1">Ikon <span class="text-muted">(bi-name)</span></label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text"><i class="bi bi-{{ old('whyus_item_'.$item['n'].'_icon', $settings['whyus_item_'.$item['n'].'_icon'] ?? $item['icon_def']) }}"></i></span>
+                            <input type="text" name="whyus_item_{{ $item['n'] }}_icon" class="form-control icon-input" maxlength="50"
+                                   value="{{ old('whyus_item_'.$item['n'].'_icon', $settings['whyus_item_'.$item['n'].'_icon'] ?? $item['icon_def']) }}"
+                                   placeholder="{{ $item['icon_def'] }}" data-index="wi{{ $item['n'] }}">
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small fw-medium mb-1">Judul</label>
+                        <input type="text" name="whyus_item_{{ $item['n'] }}_title" class="form-control form-control-sm" maxlength="80"
+                               value="{{ old('whyus_item_'.$item['n'].'_title', $settings['whyus_item_'.$item['n'].'_title'] ?? $item['title_def']) }}"
+                               placeholder="{{ $item['title_def'] }}">
+                    </div>
+                    <div>
+                        <label class="form-label small fw-medium mb-1">Deskripsi</label>
+                        <textarea name="whyus_item_{{ $item['n'] }}_desc" class="form-control form-control-sm" rows="2" maxlength="200"
+                                  placeholder="{{ $item['desc_def'] }}">{{ old('whyus_item_'.$item['n'].'_desc', $settings['whyus_item_'.$item['n'].'_desc'] ?? $item['desc_def']) }}</textarea>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+@endif
+
 <div class="d-flex gap-2">
     <button type="submit" class="btn btn-primary px-4">
         <i class="bi bi-check2 me-2"></i>Simpan Konten
