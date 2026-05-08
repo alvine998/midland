@@ -17,6 +17,13 @@ class Page extends Model
         'video_url',
         'section_title',
         'content',
+        'vision',
+        'mission',
+        'features',
+    ];
+
+    protected $casts = [
+        'features' => 'array',
     ];
 
     public static function findBySlug(string $slug): ?self

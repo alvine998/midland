@@ -167,7 +167,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs5.min.js" integrity="sha384-TtWVJ+ZLDHxX/2c0bXxbXxbXxbXxbXxbXxbXxbXxbXxbXxbXxbXxbXxbXxbXxb" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs5.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 @stack('scripts')
 </body>
