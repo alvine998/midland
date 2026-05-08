@@ -14,11 +14,39 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\CareerController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
 
 // ─── SEO ────────────────────────────────────────────────────────────────────
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/fix-storage', function () {
+    // We use the absolute path from your error message
+    $target = '/home/u276054823/domains/midlandproperti.id/midland_web/Midland/storage/app/public';
+    $shortcut = '/home/u276054823/domains/midlandproperti.id/public_html/storage';
 
+    // 1. Ensure the target directory actually exists
+    if (!file_exists($target)) {
+        mkdir($target, 0775, true);
+    }
+
+    // 2. If a file/folder/link already exists at the shortcut location, remove it
+    // symlink() will fail if something is already there.
+    if (file_exists($shortcut) || is_link($shortcut)) {
+        // If it's a directory, we need to delete it or rename it
+        if (is_dir($shortcut) && !is_link($shortcut)) {
+            rename($shortcut, $shortcut . '_backup_' . time());
+        } else {
+            unlink($shortcut);
+        }
+    }
+
+    // 3. Create the link
+    if (symlink($target, $shortcut)) {
+        return 'Storage link created successfully!';
+    } else {
+        return 'Link creation failed. Check if symlink function is enabled in hPanel PHP Options.';
+    }
+});
 // ─── Public Website ────────────────────────────────────────────────────────
 Route::get('/', [FrontController::class, 'home'])->name('home');
 Route::get('/project', [FrontController::class, 'project'])->name('project');
@@ -33,6 +61,9 @@ Route::get('/karir', [FrontController::class, 'karir'])->name('karir');
 Route::get('/simulasi-cicilan', [FrontController::class, 'simulasiCicilan'])->name('simulasi-cicilan');
 Route::get('/simulasi-cicilan/recommend', [FrontController::class, 'simulasiRecommend'])->name('simulasi-cicilan.recommend');
 Route::post('/simulasi-cicilan/lead', [FrontController::class, 'simulasiStoreLead'])->name('simulasi-cicilan.lead');
+Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+Route::post('/api/chat/send', [ChatController::class, 'send'])->name('chat.send')->middleware('throttle:chat');
+Route::get('/api/chat/history', [ChatController::class, 'history'])->name('chat.history');
 
 // ─── Admin Auth ────────────────────────────────────────────────────────────
 Route::prefix('admin')->name('admin.')->group(function () {

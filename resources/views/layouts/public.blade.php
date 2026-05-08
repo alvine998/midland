@@ -562,6 +562,7 @@
                         <li class="mb-1"><a href="{{ route('about') }}">{{ $menu_about ?? 'Tentang Kami' }}</a></li>
                         <li class="mb-1"><a href="{{ route('contact') }}">{{ $menu_contact ?? 'Kontak' }}</a></li>
                         <li class="mb-1"><a href="{{ route('articles') }}">Berita</a></li>
+                        <li class="mb-1"><a href="{{ route('chat') }}">Chat AI</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-6">
@@ -591,6 +592,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
+    {{-- AI Chat Widget (hidden on /chat page itself) --}}
+    @unless(request()->routeIs('chat'))
+        @include('components.chat-widget')
+    @endunless
 </body>
 
 </html>
