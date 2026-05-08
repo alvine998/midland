@@ -24,6 +24,7 @@ class ProjectController extends Controller
     {
         $data = $request->validate([
             'title'       => 'required|string|max:200',
+            'slug'        => 'nullable|string|max:220|regex:/^[a-z0-9-]+$/|unique:projects,slug',
             'description' => 'nullable|string',
             'location'    => 'nullable|string|max:200',
             'price'       => 'nullable|string|max:100',
@@ -37,11 +38,13 @@ class ProjectController extends Controller
             'pic_name'    => 'nullable|string|max:100',
             'pic_phone'   => 'nullable|string|max:20',
         ], [
+            'slug.regex'  => 'Slug hanya boleh huruf kecil, angka, dan tanda minus.',
+            'slug.unique' => 'Slug sudah digunakan oleh proyek lain.',
             'images.max' => 'Maksimal 10 foto',
             'images.*.max' => 'Masing-masing foto maksimal 5 MB',
         ]);
 
-        $data['slug']     = Str::slug($data['title']);
+        $data['slug']     = Str::slug($data['slug'] ?? '') ?: Str::slug($data['title']);
         $data['featured'] = $request->boolean('featured');
 
         if ($request->hasFile('image')) {
@@ -72,6 +75,7 @@ class ProjectController extends Controller
     {
         $data = $request->validate([
             'title'       => 'required|string|max:200',
+            'slug'        => 'nullable|string|max:220|regex:/^[a-z0-9-]+$/|unique:projects,slug,' . $project->id,
             'description' => 'nullable|string',
             'location'    => 'nullable|string|max:200',
             'price'       => 'nullable|string|max:100',
@@ -85,9 +89,18 @@ class ProjectController extends Controller
             'pic_name'    => 'nullable|string|max:100',
             'pic_phone'   => 'nullable|string|max:20',
         ], [
+            'slug.regex'  => 'Slug hanya boleh huruf kecil, angka, dan tanda minus.',
+            'slug.unique' => 'Slug sudah digunakan oleh proyek lain.',
             'images.max' => 'Maksimal 10 foto',
             'images.*.max' => 'Masing-masing foto maksimal 5 MB',
         ]);
+
+        // Update slug only if explicitly provided; otherwise keep existing
+        if (!empty($data['slug'])) {
+            $data['slug'] = Str::slug($data['slug']);
+        } else {
+            unset($data['slug']);
+        }
 
         $data['featured'] = $request->boolean('featured');
 

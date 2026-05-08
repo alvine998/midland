@@ -48,5 +48,16 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+
+        // AI chat: 5 messages per minute + 50 per day, keyed to client IP.
+        // IP is the only server-side identifier that cannot be spoofed by clearing
+        // browser storage or regenerating the frontend session ID.
+        RateLimiter::for('chat', function (Request $request) {
+            $ip = $request->ip();
+            return [
+                Limit::perMinute(5)->by('chat_min:' . $ip),
+                Limit::perDay(50)->by('chat_day:' . $ip),
+            ];
+        });
     }
 }

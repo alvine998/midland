@@ -2,9 +2,22 @@
     <div class="col-md-8">
         <div class="mb-3">
             <label class="form-label fw-medium">Nama Proyek <span class="text-danger">*</span></label>
-            <input type="text" name="title" class="form-control @error('title') is-invalid @enderror"
+            <input type="text" name="title" id="project-title" class="form-control @error('title') is-invalid @enderror"
                    value="{{ old('title', $project->title ?? '') }}" required placeholder="Contoh: Green Valley Residence">
             @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-medium">Slug URL</label>
+            <div class="input-group">
+                <span class="input-group-text text-muted" style="font-size:.82rem">/project/</span>
+                <input type="text" name="slug" id="project-slug" class="form-control @error('slug') is-invalid @enderror"
+                       value="{{ old('slug', $project->slug ?? '') }}" placeholder="green-valley-residence">
+                <button type="button" class="btn btn-outline-secondary" onclick="generateSlug()" title="Generate dari judul">
+                    <i class="bi bi-arrow-repeat"></i>
+                </button>
+            </div>
+            <div class="form-text">Hanya huruf kecil, angka, dan tanda minus. Kosongkan untuk generate otomatis dari judul.</div>
+            @error('slug')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
         </div>
         <div class="mb-3">
             <label class="form-label fw-medium">Deskripsi</label>
@@ -107,3 +120,39 @@
         </div>
     </div>
 </div>
+
+<script>
+(function () {
+    const titleInput = document.getElementById('project-title');
+    const slugInput  = document.getElementById('project-slug');
+    let userEditedSlug = slugInput.value.length > 0;
+
+    function toSlug(str) {
+        return str.toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .trim()
+            .replace(/[\s_]+/g, '-')
+            .replace(/-+/g, '-');
+    }
+
+    window.generateSlug = function () {
+        slugInput.value = toSlug(titleInput.value);
+        userEditedSlug = true;
+    };
+
+    // Auto-generate slug from title only when the slug hasn't been manually set
+    titleInput.addEventListener('input', function () {
+        if (!userEditedSlug) {
+            slugInput.value = toSlug(this.value);
+        }
+    });
+
+    slugInput.addEventListener('input', function () {
+        userEditedSlug = this.value.length > 0;
+        // Sanitize on the fly
+        const pos = this.selectionStart;
+        this.value = toSlug(this.value);
+        this.setSelectionRange(pos, pos);
+    });
+})();
+</script>
