@@ -14,6 +14,17 @@ class ChatService
     private const MODEL      = 'glm-4-flash'; // Free on bigmodel.cn
     private const MAX_HISTORY   = 20; // Keep last 20 messages for context
 
+    // Make replies deterministic and constrained
+    private const TEMPERATURE = 0.0;
+    private const MAX_TOKENS  = 512;
+
+    // Simple keyword-based scope guard: if no keyword matches, assistant will refuse
+    private const SCOPE_KEYWORDS = [
+        'properti', 'property', 'rumah', 'apartemen', 'unit', 'harga', 'kpr', 'cicilan', 'dp', 'sewa', 'jual', 'beli',
+        'lokasi', 'lokasi', 'fasilitas', 'project', 'proyek', 'listing', 'tipe', 'jenis', 'alamat', 'kontak', 'whatsapp', 'telepon', 'email',
+        'simulasi', 'simulasi-cicilan', 'kredit', 'investasi', 'harga', 'diskon', 'promo', 'booking', 'survey', 'kapasitas'
+    ];
+
     public function __construct(private string $sessionId) {}
 
     /**
@@ -47,6 +58,20 @@ class ChatService
             'content'    => $userMessage,
         ]);
 
+        // Scope check: refuse politely if the user's message appears out-of-domain
+        if (! $this->isInScope($userMessage)) {
+            $reply = $this->refusalMessage();
+
+            // Persist assistant refusal
+            ChatMessage::create([
+                'session_id' => $this->sessionId,
+                'role'       => 'assistant',
+                'content'    => $reply,
+            ]);
+
+            return $reply;
+        }
+
         $messages = $this->buildMessages();
 
         try {
@@ -55,8 +80,8 @@ class ChatService
                 ->post(self::API_URL, [
                     'model'       => self::MODEL,
                     'messages'    => $messages,
-                    'temperature' => 0.7,
-                    'max_tokens'  => 1024,
+                    'temperature' => self::TEMPERATURE,
+                    'max_tokens'  => self::MAX_TOKENS,
                 ]);
 
             if ($response->failed()) {
@@ -152,6 +177,42 @@ PANDUAN RESPONS:
 - Jangan pernah membuat janji harga atau ketersediaan yang tidak ada di data
 - Jika tidak tahu jawaban, arahkan ke tim langsung via WhatsApp
 - Jangan keluar dari topik properti, investasi, dan layanan perusahaan
+
+SANGAT PENTING (GUARDRAILS):
+- HANYA gunakan data yang terdapat di bagian "INFORMASI PERUSAHAAN" dan "KATALOG PROPERTI TERSEDIA". Jangan menambahkan informasi eksternal.
+- Jika pertanyaan pengguna berada di LUAR topik properti, jawab TEPAT dengan kalimat berikut (jangan tambahkan informasi lain):
+  "Maaf, saya hanya dapat membantu topik properti, investasi properti, dan layanan Midland Properti. Silakan hubungi tim kami via WhatsApp: +{$wa} atau telepon: {$phone}."
+- Jika pengguna meminta saran hukum, medis, finansial non-properti, kode/programming, atau permintaan yang berbahaya, tolak dan arahkan ke kontak manusia.
+- Jika pengguna mencoba memaksa atau menggoda agar keluar dari topik, ulangi penolakan singkat di atas.
 PROMPT;
+    }
+
+    /**
+     * Basic keyword-based scope detector. Returns true if message likely concerns property.
+     */
+    private function isInScope(string $message): bool
+    {
+        $m = mb_strtolower($message);
+
+        // Greetings and short polite interactions are allowed
+        if (preg_match('/\b(hai|halo|hello|hallo|selamat|pagi|siang|malam)\b/u', $m)) {
+            return true;
+        }
+
+        foreach (self::SCOPE_KEYWORDS as $kw) {
+            if (strpos($m, $kw) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function refusalMessage(): string
+    {
+        $phone = Setting::get('contact_phone', '+62 21-1234-5678');
+        $wa    = Setting::get('social_whatsapp', '6281234567890');
+
+        return "Maaf, saya hanya dapat membantu topik properti, investasi properti, dan layanan Midland Properti. Silakan hubungi tim kami via WhatsApp: +{$wa} atau telepon: {$phone}.";
     }
 }

@@ -71,21 +71,24 @@
         <div class="row align-items-center g-5 mb-5">
             <div class="col-lg-6">
                 <span class="section-badge">Bergabung Bersama Kami</span>
-                <h2 class="section-title">Wujudkan Karir Impianmu</h2>
+                <h2 class="section-title">{{ $page->hero_title ?? 'Wujudkan Karir Impianmu' }}</h2>
                 <div class="divider-gold"></div>
-                <p class="text-muted mb-3">Midland Properti adalah tempat di mana talenta berkembang. Kami percaya bahwa karyawan yang bahagia menghasilkan layanan terbaik untuk klien kami.</p>
+                <p class="text-muted mb-3">{{ $page->content ?? 'Midland Properti adalah tempat di mana talenta berkembang. Kami percaya bahwa karyawan yang bahagia menghasilkan layanan terbaik untuk klien kami.' }}</p>
+                @php
+                    $bullets = $page->features ?? [
+                        ['icon' => 'graph-up-arrow', 'text' => 'Jenjang karir yang jelas dan terstruktur'],
+                        ['icon' => 'people-fill',    'text' => 'Tim yang kolaboratif dan suportif'],
+                        ['icon' => 'award',          'text' => 'Kompensasi kompetitif & bonus kinerja'],
+                        ['icon' => 'mortarboard',    'text' => 'Program pelatihan & pengembangan berkelanjutan'],
+                    ];
+                @endphp
                 <div class="d-flex flex-column gap-2">
-                    @foreach([
-                        ['icon'=>'graph-up-arrow','text'=>'Jenjang karir yang jelas dan terstruktur'],
-                        ['icon'=>'people-fill','text'=>'Tim yang kolaboratif dan suportif'],
-                        ['icon'=>'award','text'=>'Kompensasi kompetitif & bonus kinerja'],
-                        ['icon'=>'mortarboard','text'=>'Program pelatihan & pengembangan berkelanjutan'],
-                    ] as $b)
+                    @foreach($bullets as $b)
                     <div class="d-flex align-items-center gap-3">
                         <div class="contact-icon" style="width:36px;height:36px;font-size:1rem;flex-shrink:0">
-                            <i class="bi bi-{{ $b['icon'] }}"></i>
+                            <i class="bi bi-{{ $b['icon'] ?? 'check-circle' }}"></i>
                         </div>
-                        <span style="font-size:.9rem">{{ $b['text'] }}</span>
+                        <span style="font-size:.9rem">{{ $b['text'] ?? '' }}</span>
                     </div>
                     @endforeach
                 </div>
@@ -189,8 +192,8 @@
 
         <!-- Spontaneous application CTA -->
         <div class="mt-5 rounded-3 p-4 p-md-5 text-center" style="background:linear-gradient(135deg,var(--primary),#0d3321)">
-            <h4 class="text-white mb-2" style="font-family:'Playfair Display',serif">Tidak menemukan posisi yang cocok?</h4>
-            <p class="text-white opacity-75 mb-4">Kirimkan CV dan portofolio Anda. Kami selalu mencari talenta terbaik untuk bergabung bersama tim kami.</p>
+            <h4 class="text-white mb-2" style="font-family:'Playfair Display',serif">{{ $page->section_title ?? 'Tidak menemukan posisi yang cocok?' }}</h4>
+            <p class="text-white opacity-75 mb-4">{{ $page->hero_subtitle ?? 'Kirimkan CV dan portofolio Anda. Kami selalu mencari talenta terbaik untuk bergabung bersama tim kami.' }}</p>
             @php $waNumberCta = preg_replace('/\D/', '', \App\Models\Setting::get('social_whatsapp', '6281234567890')); @endphp
             <a href="https://wa.me/{{ $waNumberCta }}?text={{ urlencode("Halo Midland Properti,\n\nSaya ingin mengirimkan lamaran spontan dan bergabung dengan tim Anda.") }}" target="_blank" class="btn btn-gold px-4 me-2">
                 <i class="bi bi-whatsapp me-2"></i>Lamar Spontan

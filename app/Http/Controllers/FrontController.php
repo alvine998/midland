@@ -152,12 +152,13 @@ class FrontController extends Controller
 
     public function karir()
     {
+        $page    = Page::findBySlug('karir');
         $careers = Career::where('is_active', true)->orderBy('sort_order')->orderByDesc('id')->get();
         $seo     = $this->seo(
             'Karir - Midland Properti',
             'Bergabunglah bersama tim profesional Midland Properti. Lihat lowongan pekerjaan terkini dan wujudkan karir impianmu di industri properti.'
         );
-        return view('front.karir', array_merge($this->nav(), compact('careers'), $seo));
+        return view('front.karir', array_merge($this->nav(), compact('page', 'careers'), $seo));
     }
 
     public function simulasiStoreLead(\Illuminate\Http\Request $request)

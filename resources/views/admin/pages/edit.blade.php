@@ -285,6 +285,97 @@ $features = old('features', $page->features ?? $defaultFeatures);
 </div>
 @endif
 
+{{-- ── KARIR PAGE CONTENT ──────────────────────────── --}}
+@if($slug === 'karir')
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-transparent border-bottom py-3 px-4">
+        <h6 class="mb-0 fw-semibold" style="color:var(--primary)">
+            <i class="bi bi-briefcase me-2"></i>Intro Halaman Karir
+        </h6>
+        <small class="text-muted">Teks pengantar di bagian atas halaman karir.</small>
+    </div>
+    <div class="card-body p-4">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <label class="form-label fw-medium">Judul Intro</label>
+                <input type="text" name="hero_title" class="form-control"
+                       value="{{ old('hero_title', $page->hero_title ?? '') }}"
+                       placeholder="Wujudkan Karir Impianmu">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-medium">Deskripsi Intro</label>
+                <textarea name="content" class="form-control" rows="3"
+                          placeholder="Midland Properti adalah tempat di mana talenta berkembang...">{{ old('content', $page->content ?? '') }}</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-transparent border-bottom py-3 px-4">
+        <h6 class="mb-0 fw-semibold" style="color:var(--primary)">
+            <i class="bi bi-list-check me-2"></i>Poin Keunggulan Bergabung
+        </h6>
+        <small class="text-muted">4 alasan bergabung yang tampil di intro karir. Ikon dari <a href="https://icons.getbootstrap.com" target="_blank">Bootstrap Icons</a>.</small>
+    </div>
+    <div class="card-body p-4">
+        <div class="row g-3">
+            @php
+                $kariрBullets = old('karir_bullets', $page->features ?? [
+                    ['icon' => 'graph-up-arrow', 'text' => 'Jenjang karir yang jelas dan terstruktur'],
+                    ['icon' => 'people-fill',    'text' => 'Tim yang kolaboratif dan suportif'],
+                    ['icon' => 'award',          'text' => 'Kompensasi kompetitif & bonus kinerja'],
+                    ['icon' => 'mortarboard',    'text' => 'Program pelatihan & pengembangan berkelanjutan'],
+                ]);
+            @endphp
+            @foreach($kariрBullets as $bi => $b)
+            <div class="col-md-6">
+                <div class="p-3 border rounded">
+                    <div class="fw-semibold text-muted small mb-2">Poin {{ $bi + 1 }}</div>
+                    <div class="row g-2">
+                        <div class="col-4">
+                            <label class="form-label small fw-medium mb-1">Ikon</label>
+                            <input type="text" name="karir_bullets[{{ $bi }}][icon]" class="form-control form-control-sm" maxlength="50"
+                                   value="{{ $b['icon'] ?? '' }}" placeholder="graph-up-arrow">
+                        </div>
+                        <div class="col-8">
+                            <label class="form-label small fw-medium mb-1">Teks</label>
+                            <input type="text" name="karir_bullets[{{ $bi }}][text]" class="form-control form-control-sm" maxlength="120"
+                                   value="{{ $b['text'] ?? '' }}" placeholder="Kalimat singkat keunggulan">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-transparent border-bottom py-3 px-4">
+        <h6 class="mb-0 fw-semibold" style="color:var(--primary)">
+            <i class="bi bi-megaphone me-2"></i>CTA Bawah Halaman
+        </h6>
+        <small class="text-muted">Banner "Tidak menemukan posisi yang cocok?" di bagian bawah daftar lowongan.</small>
+    </div>
+    <div class="card-body p-4">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <label class="form-label fw-medium">Judul CTA</label>
+                <input type="text" name="section_title" class="form-control" maxlength="200"
+                       value="{{ old('section_title', $page->section_title ?? '') }}"
+                       placeholder="Tidak menemukan posisi yang cocok?">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-medium">Deskripsi CTA</label>
+                <textarea name="hero_subtitle" class="form-control" rows="2" maxlength="300"
+                          placeholder="Kirimkan CV dan portofolio Anda...">{{ old('hero_subtitle', $page->hero_subtitle ?? '') }}</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <div class="d-flex gap-2">
     <button type="submit" class="btn btn-primary px-4">
         <i class="bi bi-check2 me-2"></i>Simpan Konten

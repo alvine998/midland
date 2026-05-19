@@ -37,6 +37,9 @@ class PageController extends Controller
             'features.*.title' => 'nullable|string|max:100',
             'features.*.desc'  => 'nullable|string|max:300',
             'features.*.icon'  => 'nullable|string|max:60',
+            'karir_bullets'           => 'nullable|array',
+            'karir_bullets.*.icon'    => 'nullable|string|max:60',
+            'karir_bullets.*.text'    => 'nullable|string|max:120',
         ];
 
         if ($slug === 'home') {
@@ -78,6 +81,15 @@ class PageController extends Controller
                 ->values()
                 ->toArray();
             $page->features = $features ?: null;
+        }
+
+        // Save karir bullets as features
+        if ($slug === 'karir' && $request->has('karir_bullets')) {
+            $bullets = collect($request->input('karir_bullets'))
+                ->filter(fn($b) => !empty($b['text']))
+                ->values()
+                ->toArray();
+            $page->features = $bullets ?: null;
         }
 
         if ($request->hasFile('hero_image')) {

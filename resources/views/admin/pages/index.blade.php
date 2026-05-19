@@ -14,6 +14,7 @@
         ['slug' => 'gallery', 'label' => 'Galeri (Gallery)',    'icon' => 'images',        'desc' => 'Judul dan deskripsi halaman galeri'],
         ['slug' => 'about',   'label' => 'Tentang Kami (About)','icon' => 'info-circle',   'desc' => 'Konten halaman tentang perusahaan'],
         ['slug' => 'contact', 'label' => 'Kontak (Contact)',    'icon' => 'telephone',     'desc' => 'Deskripsi halaman kontak'],
+        ['slug' => 'karir',   'label' => 'Karir (Career)',      'icon' => 'briefcase',     'desc' => 'Intro, poin keunggulan, dan teks CTA halaman karir'],
     ] as $page)
     <div class="col-md-6 col-lg-4">
         <div class="card border-0 shadow-sm h-100">
