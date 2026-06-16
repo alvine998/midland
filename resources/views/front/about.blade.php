@@ -111,7 +111,7 @@
 
 <!-- Struktur Organisasi -->
 @if($organizations->count())
-<section class="py-5">
+<!-- <section class="py-5">
     <div class="container">
         <div class="text-center mb-5">
             <span class="section-badge">Tim Kami</span>
@@ -142,6 +142,6 @@
             @endforeach
         </div>
     </div>
-</section>
+</section> -->
 @endif
 @endsection
