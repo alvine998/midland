@@ -43,7 +43,7 @@
                     ];
                     @endphp
                     @foreach($features as $item)
-                    <div class="col-6">
+                    <div class="col-12 col-sm-6">
                         <div class="p-4 rounded-3 h-100" style="background:var(--light-bg)">
                             <div class="contact-icon mb-3">
                                 <i class="bi bi-{{ $item['icon'] ?? 'star' }}"></i>

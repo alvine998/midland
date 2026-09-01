@@ -287,6 +287,8 @@
         const box = document.getElementById('chat-messages');
         const div = document.createElement('div');
         div.className = 'chat-msg ' + role;
+        // Fallback: strip stray markdown if backend hasn't sanitized (older history)
+        content = String(content).replace(/\*\*/g, '').replace(/__/g, '').replace(/^#{1,6}\s+/gm, '');
         div.textContent = content;
         box.appendChild(div);
         scrollBottom();

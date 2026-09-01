@@ -453,6 +453,185 @@
         .text-primary-custom {
             color: var(--primary) !important;
         }
+
+        .min-vh-75 {
+            min-height: 75vh;
+        }
+
+        html { overflow-x: hidden; }
+        body { overflow-x: hidden; }
+        img { max-width: 100%; }
+
+        /* ── Navbar mobile ─────────────────────────────────────────────── */
+        @media (max-width: 991.98px) {
+            .main-navbar .navbar-collapse {
+                background: var(--primary);
+                padding: 1rem 0 .75rem;
+                margin-top: .75rem;
+                border-top: 1px solid rgba(255, 255, 255, .08);
+            }
+            .main-navbar .nav-item { width: 100%; }
+            .main-navbar .nav-link {
+                padding: .65rem 0 !important;
+            }
+            .main-navbar .nav-link.active {
+                border-bottom: none;
+                color: var(--gold) !important;
+                border-left: 3px solid var(--gold);
+                padding-left: .75rem !important;
+            }
+            .main-navbar .nav-link.btn-gold {
+                margin-left: 0 !important;
+                margin-top: .5rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: .6rem 1.25rem !important;
+                border-left: none;
+                text-align: center;
+            }
+            .main-navbar .nav-link.btn-gold.active {
+                border-left: none;
+                padding-left: 1.25rem !important;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            /* ── Hero ── */
+            .hero-section {
+                min-height: auto;
+                padding: 3.5rem 0 3rem;
+                align-items: flex-start;
+            }
+            .hero-section .min-vh-75 {
+                min-height: auto !important;
+            }
+            .hero-overlay {
+                background: linear-gradient(to bottom, rgba(26, 92, 58, .88) 0%, rgba(13, 51, 33, .92) 100%);
+            }
+            .hero-badge {
+                font-size: .7rem;
+                letter-spacing: 1.5px;
+                padding: .3rem .8rem;
+            }
+            .hero-title {
+                font-size: clamp(1.85rem, 8vw, 2.5rem);
+                line-height: 1.2;
+            }
+            .hero-subtitle {
+                font-size: .95rem;
+                line-height: 1.65;
+            }
+            .hero-content .d-flex.flex-wrap {
+                flex-direction: column;
+            }
+            .hero-content .btn-gold,
+            .hero-content .btn-outline-light-custom {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+                padding: .8rem 1.5rem;
+            }
+            /* ── Stats ── */
+            .stats-bar { padding: 1.25rem 0; }
+            .stat-number { font-size: 1.6rem; }
+            .stat-label { font-size: .72rem; }
+            /* ── Sections ── */
+            .section-title { font-size: clamp(1.5rem, 6vw, 1.9rem); }
+            .page-header { padding: 2.5rem 0 2rem; }
+            .page-header h1 { font-size: 1.75rem; line-height: 1.25; }
+            .page-header .breadcrumb { flex-wrap: wrap; }
+            /* ── Cards ── */
+            .project-card .card-img-top,
+            .project-card .card-img-placeholder { height: 200px; }
+            /* ── Gallery ── */
+            .gallery-item img { height: 180px; }
+            /* ── CTA ── */
+            .cta-section h2 { font-size: 1.5rem; }
+            .cta-section p { font-size: .9rem; }
+            /* ── Footer ── */
+            footer .d-flex.flex-wrap.justify-content-between {
+                flex-direction: column;
+                gap: .5rem;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .container { padding-left: 1rem; padding-right: 1rem; }
+            .hero-section { padding: 2.5rem 0 2.5rem; }
+            .hero-title { font-size: 1.75rem; }
+            .stats-bar .stat-number { font-size: 1.45rem; }
+            .project-card .card-img-top,
+            .project-card .card-img-placeholder { height: 190px; }
+            .gallery-item img { height: 160px; }
+            section.py-5 { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+            .page-header { padding: 2rem 0 1.5rem; }
+            .page-header h1 { font-size: 1.6rem; }
+            /* Stack WhyUs consultation box */
+            .whyus-contact-box {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+            .whyus-contact-box .btn {
+                width: 100%;
+                margin-left: 0 !important;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .hero-title { font-size: 1.55rem; }
+            .btn-gold, .btn-outline-light-custom { font-size: .9rem; }
+            .stat-number { font-size: 1.3rem; }
+        }
+
+        /* ── Chat widget mobile tuning ─────────────────────────────────── */
+        @media (max-width: 480px) {
+            #chat-bubble {
+                bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+                right: 16px;
+                width: 52px;
+                height: 52px;
+            }
+            #chat-panel {
+                bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+                right: 8px;
+                left: 8px;
+                width: auto;
+                max-width: none;
+                height: min(70vh, 520px);
+                max-height: calc(100dvh - 96px);
+            }
+        }
+
+        footer a { word-break: break-word; }
+
+        /* ── Property detail / project detail mobile tweaks ──────────────── */
+        @media (max-width: 767.98px) {
+            .row.g-5 { --bs-gutter-y: 1.75rem; }
+            .nav-tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .nav-tabs::-webkit-scrollbar { display: none; }
+            .nav-tabs .nav-link { white-space: nowrap; font-size: .9rem; }
+            .sticky-top { position: static !important; }
+            /* CTA buttons stack on very narrow */
+            .cta-section .d-flex.justify-content-center {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .cta-section .d-flex.justify-content-center .btn {
+                width: 100%;
+            }
+        }
+        @media (max-width: 575.98px) {
+            .whyus-visual-box { height: 160px !important; }
+            .card-body.p-4 { padding: 1.25rem !important; }
+        }
     </style>
     @stack('styles')
     <!-- JSON-LD Schema -->
@@ -477,7 +656,6 @@
             ]
         }
     </script>
-    @stack('styles')
 </head>
 
 <body>

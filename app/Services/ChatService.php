@@ -10,13 +10,15 @@ use Illuminate\Support\Facades\Log;
 
 class ChatService
 {
-    private const API_URL    = 'https://open.bigmodel.cn/api/paas/v4/chat/completions';
-    private const MODEL      = 'glm-4-flash'; // Free on bigmodel.cn
-    private const MAX_HISTORY   = 20; // Keep last 20 messages for context
+    private const API_URL     = 'https://inference.poolside.ai/v1/chat/completions';
+    private const MODEL       = 'poolside/laguna-xs-2.1';
+    private const MAX_HISTORY = 20;
 
     // Make replies deterministic and constrained
+    // Laguna XS 2.1 is a reasoning model — reasoning_tokens count toward max_tokens,
+    // so we need a larger budget to avoid truncating the actual answer.
     private const TEMPERATURE = 0.0;
-    private const MAX_TOKENS  = 512;
+    private const MAX_TOKENS  = 1024;
 
     // Simple keyword-based scope guard: if no keyword matches, assistant will refuse
     private const SCOPE_KEYWORDS = [
@@ -26,28 +28,6 @@ class ChatService
     ];
 
     public function __construct(private string $sessionId) {}
-
-    /**
-     * Zhipu AI keys are formatted as "{id}.{secret}" and require a JWT token.
-     * We generate it inline without any extra library (pure HS256).
-     */
-    private function zhipuToken(): string
-    {
-        $apiKey = config('services.glm.key');
-        [$id, $secret] = explode('.', $apiKey, 2);
-
-        $b64 = fn(string $d) => rtrim(strtr(base64_encode($d), '+/', '-_'), '=');
-
-        $header  = $b64(json_encode(['alg' => 'HS256', 'typ' => 'JWT', 'sign_type' => 'SIGN']));
-        $payload = $b64(json_encode([
-            'api_key'   => $id,
-            'exp'       => (time() + 3600) * 1000,
-            'timestamp' => (int) (microtime(true) * 1000),
-        ]));
-        $sig = $b64(hash_hmac('sha256', "$header.$payload", $secret, true));
-
-        return "$header.$payload.$sig";
-    }
 
     public function send(string $userMessage): string
     {
@@ -62,7 +42,6 @@ class ChatService
         if (! $this->isInScope($userMessage)) {
             $reply = $this->refusalMessage();
 
-            // Persist assistant refusal
             ChatMessage::create([
                 'session_id' => $this->sessionId,
                 'role'       => 'assistant',
@@ -74,22 +53,44 @@ class ChatService
 
         $messages = $this->buildMessages();
 
+        $apiKey = config('services.laguna.key');
+        $apiUrl = config('services.laguna.url', self::API_URL);
+        $model  = config('services.laguna.model', self::MODEL);
+
+        if (empty($apiKey)) {
+            Log::error('LAGUNA_API_KEY not configured');
+            return 'Maaf, asisten sedang tidak tersedia (konfigurasi API belum lengkap). Silakan hubungi kami melalui WhatsApp atau telepon langsung.';
+        }
+
         try {
             $response = Http::timeout(30)
-                ->withToken($this->zhipuToken())
-                ->post(self::API_URL, [
-                    'model'       => self::MODEL,
+                ->withToken($apiKey)
+                ->withHeaders(['Accept' => 'application/json'])
+                ->post($apiUrl, [
+                    'model'       => $model,
                     'messages'    => $messages,
                     'temperature' => self::TEMPERATURE,
                     'max_tokens'  => self::MAX_TOKENS,
                 ]);
 
             if ($response->failed()) {
-                Log::error('Groq API error', ['status' => $response->status(), 'body' => $response->body()]);
+                Log::error('Laguna API error', ['status' => $response->status(), 'body' => $response->body()]);
                 return 'Maaf, asisten sedang tidak tersedia. Silakan hubungi kami melalui WhatsApp atau telepon langsung.';
             }
 
             $reply = $response->json('choices.0.message.content', '');
+
+            // Fallback to reasoning_content if content is empty (some reasoning models)
+            if (empty($reply)) {
+                $reply = $response->json('choices.0.message.reasoning_content', '');
+            }
+
+            $reply = $this->sanitizeReply((string) $reply);
+
+            if (empty($reply)) {
+                Log::warning('Laguna empty reply', ['body' => $response->body()]);
+                $reply = 'Maaf, saya belum bisa merespons saat ini. Silakan hubungi tim kami via WhatsApp.';
+            }
 
             // Persist assistant message
             ChatMessage::create([
@@ -101,7 +102,7 @@ class ChatService
             return $reply;
 
         } catch (\Throwable $e) {
-            Log::error('Groq exception: ' . $e->getMessage());
+            Log::error('Laguna exception: ' . $e->getMessage());
             return 'Terjadi kesalahan sementara. Silakan coba lagi atau hubungi kami langsung.';
         }
     }
@@ -177,6 +178,7 @@ PANDUAN RESPONS:
 - Jangan pernah membuat janji harga atau ketersediaan yang tidak ada di data
 - Jika tidak tahu jawaban, arahkan ke tim langsung via WhatsApp
 - Jangan keluar dari topik properti, investasi, dan layanan perusahaan
+- PENTING FORMAT: Tulis dalam TEKS BIASA (plain text) saja. JANGAN gunakan format markdown seperti **bold**, __underline__, ## heading, atau bullet markdown. Contoh salah: **Rp 870 Juta**. Contoh benar: Rp 870 Juta. Tulis harga, nama proyek, dan informasi lain tanpa tanda **. Gunakan paragraf atau daftar bernomor sederhana dengan line break biasa.
 
 SANGAT PENTING (GUARDRAILS):
 - HANYA gunakan data yang terdapat di bagian "INFORMASI PERUSAHAAN" dan "KATALOG PROPERTI TERSEDIA". Jangan menambahkan informasi eksternal.
@@ -214,5 +216,25 @@ PROMPT;
         $wa    = Setting::get('social_whatsapp', '6281234567890');
 
         return "Maaf, saya hanya dapat membantu topik properti, investasi properti, dan layanan Midland Properti. Silakan hubungi tim kami via WhatsApp: +{$wa} atau telepon: {$phone}.";
+    }
+
+    /**
+     * Strip markdown artifacts so chat widget (textContent) does not show literal **.
+     */
+    private function sanitizeReply(string $text): string
+    {
+        if ($text === '') {
+            return '';
+        }
+        // Remove bold/italic markers ** __
+        $text = str_replace(['**', '__'], '', $text);
+        // Remove heading markers at start of lines: # ## etc.
+        $text = preg_replace('/^#{1,6}\s*/m', '', $text);
+        // Remove stray markdown list markers like "•" keep as "-"
+        // Normalize multiple spaces/tabs
+        $text = preg_replace('/[ \t]{2,}/', ' ', $text);
+        // Clean up lines with only dashes/stars
+        $text = preg_replace('/^\s*[\*\-]\s*$/m', '', $text);
+        return trim($text);
     }
 }

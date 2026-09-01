@@ -354,6 +354,7 @@
         }
         const bubble = document.createElement('div');
         bubble.className = 'bubble';
+        content = String(content).replace(/\*\*/g, '').replace(/__/g, '').replace(/^#{1,6}\s+/gm, '');
         bubble.textContent = content;
         wrap.appendChild(bubble);
         box.appendChild(wrap);

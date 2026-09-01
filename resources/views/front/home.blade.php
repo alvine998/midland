@@ -133,7 +133,7 @@
                 @endphp
                 <div class="row g-3">
                     @foreach($whyusItems as $item)
-                    <div class="col-6">
+                    <div class="col-12 col-sm-6">
                         <div class="d-flex gap-3">
                             <div class="flex-shrink-0 mt-1">
                                 <div class="contact-icon" style="width:40px;height:40px;font-size:1.1rem">
@@ -152,26 +152,26 @@
             <div class="col-lg-6">
                 <div class="row g-3">
                     <div class="col-6">
-                        <div class="rounded-3 overflow-hidden" style="height:200px;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center">
+                        <div class="rounded-3 overflow-hidden whyus-visual-box" style="height:200px;background:linear-gradient(135deg,var(--primary),var(--primary-light));display:flex;align-items:center;justify-content:center">
                             <i class="bi bi-buildings text-white opacity-25" style="font-size:5rem"></i>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="rounded-3 overflow-hidden" style="height:200px;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center">
+                        <div class="rounded-3 overflow-hidden whyus-visual-box" style="height:200px;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center">
                             <i class="bi bi-house-heart text-white opacity-50" style="font-size:5rem"></i>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="rounded-3 p-4" style="background:var(--light-bg)">
-                            <div class="d-flex align-items-center gap-3">
+                            <div class="d-flex align-items-center gap-3 flex-wrap whyus-contact-box">
                                 <div class="contact-icon" style="width:55px;height:55px;font-size:1.5rem;background:var(--gold);color:var(--primary)">
                                     <i class="bi bi-telephone-fill"></i>
                                 </div>
-                                <div>
+                                <div class="flex-grow-1" style="min-width:0">
                                     <div class="text-muted small">Butuh konsultasi gratis?</div>
-                                    <div class="fw-semibold" style="color:var(--primary)">{{ \App\Models\Setting::get('contact_phone', '+62 xxx-xxxx-xxxx') }}</div>
+                                    <div class="fw-semibold text-break" style="color:var(--primary)">{{ \App\Models\Setting::get('contact_phone', '+62 xxx-xxxx-xxxx') }}</div>
                                 </div>
-                                <a href="{{ route('contact') }}" class="btn btn-gold ms-auto">Hubungi</a>
+                                <a href="{{ route('contact') }}" class="btn btn-gold ms-sm-auto w-100 w-sm-auto mt-2 mt-sm-0">Hubungi</a>
                             </div>
                         </div>
                     </div>

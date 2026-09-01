@@ -193,7 +193,7 @@
                                        data-bs-toggle="tooltip"
                                        title="Suku bunga rata-rata KPR di Indonesia saat ini berkisar 7–12% per tahun."></i>
                                 </span>
-                                <span id="bungaDisplay" class="text-gold fw-bold">9%</span>
+                                <span id="bungaDisplay" class="text-gold fw-bold">9.00%</span>
                             </label>
                             <input type="range" id="inputBungaRange" class="form-range mb-2" min="1" max="20" step="0.5" value="9">
                             <div class="d-flex justify-content-between" style="font-size:.75rem;color:var(--gray)">
@@ -384,7 +384,7 @@ document.getElementById('inputTenorRange').addEventListener('input', function ()
 });
 
 document.getElementById('inputBungaRange').addEventListener('input', function () {
-    document.getElementById('bungaDisplay').textContent = this.value + '%';
+    document.getElementById('bungaDisplay').textContent = parseFloat(this.value).toFixed(2) + '%';
 });
 
 function syncDP() {
@@ -517,7 +517,7 @@ document.getElementById('btnHitung').addEventListener('click', function () {
     document.getElementById('rDP').textContent            = fmtShort(dp);
     document.getElementById('rPokok').textContent         = fmtShort(pinjaman);
     document.getElementById('rTenor').textContent         = tenor + ' tahun (' + n + ' bulan)';
-    document.getElementById('rBunga').textContent         = bunga + '% / tahun';
+    document.getElementById('rBunga').textContent         = bunga.toFixed(2) + '% / tahun';
     document.getElementById('rTotal').textContent         = fmtShort(totalBayar);
 
     // Recommended properties fetch
@@ -544,7 +544,7 @@ document.getElementById('btnHitung').addEventListener('click', function () {
         `- Harga Properti: ${fmt(harga)}\n` +
         `- DP: ${fmt(dp)}\n` +
         `- Tenor: ${tenor} tahun\n` +
-        `- Suku Bunga: ${bunga}%\n` +
+        `- Suku Bunga: ${bunga.toFixed(2)}%\n` +
         `- Estimasi Cicilan: ${fmt(monthly)}/bulan\n\nMohon bantuannya. Terima kasih.`
     );
     const waBase = document.getElementById('btnWA').href.split('?')[0];

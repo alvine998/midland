@@ -35,4 +35,10 @@ return [
         'key' => env('GLM_API_KEY'),
     ],
 
+    'laguna' => [
+        'key'   => env('LAGUNA_API_KEY'),
+        'url'   => env('LAGUNA_API_URL', 'https://inference.poolside.ai/v1/chat/completions'),
+        'model' => env('LAGUNA_MODEL', 'poolside/laguna-xs-2.1'),
+    ],
+
 ];
